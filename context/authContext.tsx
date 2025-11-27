@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { createClient } from "@/lib/supabase/client"; // Changed from server to client
+import { createClient } from "@/lib/supabase/client";
 import { AuthContextType, AuthUser, UserProfile } from "@/types/auth";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -68,7 +69,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
     });
-    if (error) throw error;
+
+    if (error) {
+      if (error.message.includes("Invalid login credentials")) {
+        throw new Error("Invalid email or password");
+      }
+      throw error;
+    }
+
+    toast.success("Signed in successfully!");
     router.push("/dashboard");
   };
 
@@ -80,13 +89,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: { full_name: name },
       },
     });
-    if (error) throw error;
+
+    if (error) {
+      if (error.message.includes("User already registered")) {
+        throw new Error("An account with this email already exists");
+      }
+      throw error;
+    }
 
     if (data.session?.access_token) {
-      await axios.post("/api/users/create", null, {
-        headers: { Authorization: `Bearer ${data.session.access_token}` },
-      });
+      try {
+        await axios.post("/api/users/create", null, {
+          headers: { Authorization: `Bearer ${data.session.access_token}` },
+        });
+      } catch (err) {
+        const axiosError = err as AxiosError<{ error: string }>;
+        if (axiosError.response?.data?.error === "Email already exists") {
+          throw new Error("An account with this email already exists");
+        }
+        throw err;
+      }
+
+      await supabase.auth.signOut();
+      queryClient.removeQueries({ queryKey: ["auth-user"] });
+      queryClient.removeQueries({ queryKey: ["profile"] });
     }
+
+    toast.success("Account created successfully! Please sign in.");
     router.push("/login");
   };
 
@@ -94,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
     queryClient.removeQueries({ queryKey: ["auth-user"] });
     queryClient.removeQueries({ queryKey: ["profile"] });
+    toast.success("Signed out successfully");
     router.push("/login");
   };
 
