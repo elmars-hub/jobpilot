@@ -1,6 +1,5 @@
 import type { ApplicationStatus } from "@/types";
 
-// Status configuration for the kanban board
 export const STATUS_CONFIG: Record<
   ApplicationStatus,
   { label: string; color: string; bgColor: string; order: number }
@@ -49,7 +48,6 @@ export const STATUS_CONFIG: Record<
   },
 };
 
-// Kanban columns in order
 export const KANBAN_COLUMNS: ApplicationStatus[] = [
   "WISHLIST",
   "APPLIED",
@@ -59,14 +57,12 @@ export const KANBAN_COLUMNS: ApplicationStatus[] = [
   "REJECTED",
 ];
 
-// Location type options
 export const LOCATION_TYPES = [
   { value: "REMOTE", label: "Remote" },
   { value: "HYBRID", label: "Hybrid" },
   { value: "ONSITE", label: "On-site" },
 ] as const;
 
-// Timeline event icons (for reference)
 export const TIMELINE_ICONS = {
   CREATED: "✨",
   STATUS_CHANGE: "🔄",
@@ -74,7 +70,6 @@ export const TIMELINE_ICONS = {
   REMINDER_SET: "⏰",
 } as const;
 
-// Navigation items for the sidebar
 export const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/applications", label: "Applications", icon: "Briefcase" },

@@ -1,9 +1,12 @@
 "use client";
 
 import { useAuth } from "@/context/authContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
   const { user, profile, isLoading, signOut } = useAuth();
+
+  const displayName = profile?.name || user?.user_metadata?.full_name;
 
   if (isLoading) {
     return (
@@ -19,9 +22,13 @@ export default function DashboardPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <h1 className="text-xl font-bold">JobPilot</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              {profile?.name}
-            </span>
+            {displayName ? (
+              <span className="text-sm text-muted-foreground">
+                {displayName}
+              </span>
+            ) : (
+              <Skeleton className="h-4 w-24" />
+            )}
             <button
               onClick={signOut}
               className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/80"
@@ -35,7 +42,7 @@ export default function DashboardPage() {
       <main className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold">
-            Welcome, {profile?.name || "there"}!
+            Welcome, {displayName || "there"}!
           </h2>
           <p className="mt-1 text-muted-foreground">
             Your job application dashboard
@@ -74,8 +81,7 @@ export default function DashboardPage() {
               {user?.email}
             </p>
             <p>
-              <span className="text-muted-foreground">Name:</span>{" "}
-              {profile?.name || "Not set"}
+              <span className="text-muted-foreground">Name:</span> {displayName}
             </p>
             <p>
               <span className="text-muted-foreground">Weekly Goal:</span>{" "}
