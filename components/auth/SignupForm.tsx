@@ -215,7 +215,7 @@ export default function SignUpForm() {
               size="lg"
               disabled={loading}
             >
-              {loading && <Spinner />}
+              {loading && <Spinner className="h-5 w-5" />}
               Create Account
             </Button>
           </motion.div>

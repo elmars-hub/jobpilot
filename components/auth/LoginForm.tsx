@@ -181,7 +181,7 @@ export default function LoginForm() {
               size="lg"
               disabled={loading}
             >
-              {loading && <Spinner />}
+              {loading && <Spinner className="h-5 w-5" />}
               Login
             </Button>
           </motion.div>

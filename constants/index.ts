@@ -75,5 +75,11 @@ export const NAV_ITEMS = [
   { href: "/applications", label: "Applications", icon: "Briefcase" },
   { href: "/analytics", label: "Analytics", icon: "BarChart3" },
   { href: "/reminders", label: "Reminders", icon: "Bell" },
+  {
+    href: "/discover",
+    label: "Discover Jobs",
+    icon: "Search",
+    comingSoon: true,
+  },
   { href: "/settings", label: "Settings", icon: "Settings" },
 ] as const;
