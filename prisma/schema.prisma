@@ -1,0 +1,147 @@
+// JobPilot - Prisma Schema
+// Documentation: /docs/03-DATABASE-SCHEMA.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum ApplicationStatus {
+  WISHLIST
+  APPLIED
+  PHONE_SCREEN
+  INTERVIEW
+  OFFER
+  REJECTED
+  WITHDRAWN
+}
+
+enum LocationType {
+  REMOTE
+  HYBRID
+  ONSITE
+}
+
+enum TimelineEventType {
+  CREATED
+  STATUS_CHANGE
+  NOTE_ADDED
+  REMINDER_SET
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model User {
+  id            String    @id // Supabase auth UUID - no default, set from auth
+  email         String    @unique
+  name          String?
+  avatarUrl     String?
+  weeklyGoal    Int       @default(10)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  applications  Application[]
+  resumes       Resume[]
+  reminders     Reminder[]
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  company         String
+  companyLogo     String?
+  jobTitle        String
+  jobUrl          String?
+  salaryMin       Int?
+  salaryMax       Int?
+  location        String?
+  locationType    LocationType      @default(REMOTE)
+  status          ApplicationStatus @default(APPLIED)
+
+  contactName     String?
+  contactEmail    String?
+  contactLinkedIn String?
+
+  resumeId        String?
+  resume          Resume?           @relation(fields: [resumeId], references: [id])
+
+  appliedAt       DateTime          @default(now())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  notes           Note[]
+  reminders       Reminder[]
+  tags            Tag[]
+  timeline        TimelineEvent[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Note {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  content       String      @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([applicationId])
+}
+
+model TimelineEvent {
+  id            String            @id @default(cuid())
+  applicationId String
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  type          TimelineEventType
+  content       String
+  createdAt     DateTime          @default(now())
+
+  @@index([applicationId])
+}
+
+model Reminder {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  dueDate       DateTime
+  note          String?
+  isCompleted   Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+  @@index([applicationId])
+  @@index([dueDate])
+}
+
+model Resume {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  fileUrl      String
+  createdAt    DateTime      @default(now())
+  applications Application[]
+
+  @@index([userId])
+}
+
+model Tag {
+  id           String        @id @default(cuid())
+  name         String
+  color        String
+  applications Application[]
+}
