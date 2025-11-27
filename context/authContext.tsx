@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: { Authorization: `Bearer ${data.session.access_token}` },
       });
     }
-    router.push("/dashboard");
+    router.push("/login");
   };
 
   const signOut = async () => {
