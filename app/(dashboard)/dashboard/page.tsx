@@ -1,95 +1,102 @@
 "use client";
 
 import { useAuth } from "@/context/authContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Briefcase, Users, Trophy, TrendingUp } from "lucide-react";
 
 export default function DashboardPage() {
-  const { user, profile, isLoading, signOut } = useAuth();
+  const { user, profile, isLoading } = useAuth();
 
   const displayName = profile?.name || user?.user_metadata?.full_name;
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid gap-4 md:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <h1 className="text-xl font-bold">JobPilot</h1>
-          <div className="flex items-center gap-4">
-            {displayName ? (
-              <span className="text-sm text-muted-foreground">
-                {displayName}
-              </span>
-            ) : (
-              <Skeleton className="h-4 w-24" />
-            )}
-            <button
-              onClick={signOut}
-              className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/80"
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">
+          Welcome back, {displayName || "there"}!
+        </h1>
+        <p className="text-muted-foreground">
+          Here&apos;s your job search overview
+        </p>
+      </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold">
-            Welcome, {displayName || "there"}!
-          </h2>
-          <p className="mt-1 text-muted-foreground">
-            Your job application dashboard
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-lg border border-border bg-card p-6">
-            <h3 className="text-sm font-medium text-muted-foreground">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">
               Total Applications
-            </h3>
-            <p className="mt-2 text-3xl font-bold">0</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-6">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Interviews
-            </h3>
-            <p className="mt-2 text-3xl font-bold">0</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-6">
-            <h3 className="text-sm font-medium text-muted-foreground">
-              Offers
-            </h3>
-            <p className="mt-2 text-3xl font-bold">0</p>
-          </div>
-        </div>
+            </CardTitle>
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">+0 this week</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Interviews</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Scheduled</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Offers</CardTitle>
+            <Trophy className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Received</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0%</div>
+            <p className="text-xs text-muted-foreground">Of applications</p>
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="mt-8 rounded-lg border border-border bg-card p-6">
-          <h3 className="font-medium">Profile Info</h3>
-          <div className="mt-4 space-y-2 text-sm">
-            <p>
-              <span className="text-muted-foreground">User ID:</span> {user?.id}
-            </p>
-            <p>
-              <span className="text-muted-foreground">Email:</span>{" "}
-              {user?.email}
-            </p>
-            <p>
-              <span className="text-muted-foreground">Name:</span> {displayName}
-            </p>
-            <p>
-              <span className="text-muted-foreground">Weekly Goal:</span>{" "}
-              {profile?.weeklyGoal || 10} applications
-            </p>
-          </div>
-        </div>
-      </main>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Upcoming Reminders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">No reminders yet</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">No activity yet</p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
