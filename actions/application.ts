@@ -38,7 +38,6 @@ export async function getApplicationById(id: string, userId: string) {
     },
   });
 
-  // Security check
   if (!application || application.userId !== userId) {
     return null;
   }

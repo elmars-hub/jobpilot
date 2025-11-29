@@ -177,6 +177,10 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -186,5 +190,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
   }
 }

@@ -31,19 +31,19 @@ export function NavMain({
             pathname === item.url || pathname.startsWith(item.url + "/");
 
           return (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem key={item.title} className="py-1">
               <SidebarMenuButton
                 asChild
                 isActive={isActive}
                 tooltip={item.title}
               >
                 <Link href={item.comingSoon ? "#" : item.url}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  {item.icon && <item.icon className="h-5 w-5" />}
+                  <span className="text-[14px]">{item.title}</span>
                   {item.comingSoon && (
                     <Badge
                       variant="secondary"
-                      className="ml-auto text-[10px] px-1.5 py-0"
+                      className="ml-auto text-[10px] px-1.5 py-3"
                     >
                       Soon
                     </Badge>
