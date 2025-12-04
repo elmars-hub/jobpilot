@@ -19,7 +19,7 @@ export default function DashboardLayout({
           <SidebarTrigger className="-ml-1" />
           <ThemeToggle />
         </header>
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
